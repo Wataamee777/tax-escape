@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>税金避けゲー</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game-container">
+  <h1>税金避けゲー💸</h1>
+  <div id="salary-container">給料: <span id="salary">1000</span></div>
+  <div id="money-container">お金: <span id="money">0</span></div>
+  <canvas id="gameCanvas" width="600" height="400"></canvas>
+  <div id="controls">
+    <button id="pauseBtn">一時停止</button>
+    <div id="shop" class="hidden">
+      <h2>ショップ</h2>
+      <button data-item="car">車を売る</button>
+      <button data-item="vote">選挙権</button>
+      <button data-item="taxEvasion">脱税</button>
+      <button data-item="move">引越し</button>
+      <button data-item="onsen">温泉</button>
+      <button data-item="alcohol">酒・タバコ</button>
+    </div>
+  </div>
+  <div id="message"></div>
+</div>
+
+<!-- 効果音 -->
+<audio id="taxSound" src="sounds/tax.mp3"></audio>
+<audio id="itemSound" src="sounds/item.mp3"></audio>
+<audio id="fizzSound" src="sounds/fizz.mp3"></audio>
+<audio id="gameoverSound" src="sounds/gameover.mp3"></audio>
+<audio id="cashSound" src="sounds/cash.mp3"></audio>
+<audio id="clickSound" src="sounds/click.mp3"></audio>
+
+<script src="script.js"></script>
+</body>
+</html>
