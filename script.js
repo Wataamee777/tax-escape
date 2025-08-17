@@ -14,26 +14,25 @@ const gameoverSound = document.getElementById("gameoverSound");
 const cashSound = document.getElementById("cashSound");
 const clickSound = document.getElementById("clickSound");
 
-// データ保存・読み込み
+// データ
 let salary = parseInt(localStorage.getItem('salary')) || 1000;
 let money = parseInt(localStorage.getItem('money')) || 0;
 let items = JSON.parse(localStorage.getItem('items')) || {};
 salaryElem.textContent = salary;
 moneyElem.textContent = money;
-
 let paused = false;
 
-// プレイヤー（丸）
+// プレイヤー
 const player = { x: 300, y: 350, width: 30, height: 30, speed: 5 };
 
-// 弾（税金）
+// 弾
 let bullets = [];
 
 // 弾画像
 const bulletImg = new Image();
 bulletImg.src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgyqLExwFsRkq681UaahqxMrGo4l5kRj35ij9Cw-FatA9CJ0ye8zZCYRZHFObAEXzVzpRGytV13w14KXeDjN65RRAtr6tFevc_EGofNQmZdT2jYAABxL77r-XbvmF_Nn3nuEweGlilowdyo/s800/gin_dangan_silver_bullet.png";
 
-// 税の色
+// 色分け
 function getTaxColor(type){
   switch(type){
     case "consumption": return "yellow";
@@ -50,10 +49,17 @@ function getTaxColor(type){
 function spawnBullet(){
   const types = ["consumption","gas","property","social","reconstruction","income"];
   const type = types[Math.floor(Math.random()*types.length)];
-  bullets.push({x:Math.random()*570, y:0, width:20, height:20, type:type, speed:2+Math.random()*2});
+  bullets.push({
+    x:Math.random()*570,
+    y:0,
+    width:20,
+    height:20,
+    type:type,
+    speed:2+Math.random()*2
+  });
 }
 
-// プレイヤー描画（丸）
+// プレイヤー描画
 function drawPlayer(){
   ctx.fillStyle = "green";
   ctx.beginPath();
@@ -61,20 +67,21 @@ function drawPlayer(){
   ctx.fill();
 }
 
-// 弾描画（画像＋色味変更）
+// 丸弾描画（画像＋色味）
 function drawBullet(b){
   ctx.save();
-  ctx.globalAlpha = 0.9;
-  // 画像描画
+  ctx.beginPath();
+  ctx.arc(b.x+b.width/2,b.y+b.height/2,b.width/2,0,Math.PI*2);
+  ctx.closePath();
+  ctx.clip();
   ctx.drawImage(bulletImg, b.x, b.y, b.width, b.height);
-  // 色味オーバーレイ
   ctx.globalCompositeOperation = "source-atop";
   ctx.fillStyle = getTaxColor(b.type);
   ctx.fillRect(b.x, b.y, b.width, b.height);
   ctx.restore();
 }
 
-// 税適用
+// 税金処理
 function applyTax(type){
   if(items.taxEvasion){
     showMessage("脱税で税金回避！⚠️");
@@ -87,34 +94,39 @@ function applyTax(type){
     case "property": amount=50; break;
     case "social": amount=80; break;
     case "reconstruction": amount=25; break;
-    case "income": amount=Math.floor(salary*0.2); break; // 所得税20%
+    case "income": amount=Math.floor(salary*0.2); break;
   }
   salary -= amount;
   salaryElem.textContent = salary;
   taxSound.currentTime=0; taxSound.play();
   saveGame();
-  if(salary<=500){ showMessage("給料半分以下！GAME OVER"); gameoverSound.play(); paused=true; }
+  if(salary <= 500){
+    showMessage("給料半分以下！GAME OVER");
+    gameoverSound.play();
+    paused = true;
+  }
 }
 
 // メッセージ表示
 function showMessage(msg){
-  messageElem.textContent=msg;
+  messageElem.textContent = msg;
   setTimeout(()=>{messageElem.textContent="";},2000);
 }
 
-// ゲーム更新
+// 更新ループ
 function update(){
   if(!paused){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     bullets.forEach(b=>{
       b.y += b.speed;
       drawBullet(b);
-      if(b.x < player.x + player.width &&
-         b.x + b.width > player.x &&
-         b.y < player.y + player.height &&
-         b.y + b.height > player.y){
-           applyTax(b.type);
-           bullets = bullets.filter(x=>x!==b);
+      // 衝突判定
+      if(b.x < player.x+player.width &&
+         b.x+b.width > player.x &&
+         b.y < player.y+player.height &&
+         b.y+b.height > player.y){
+        applyTax(b.type);
+        bullets = bullets.filter(x=>x!==b);
       }
     });
     drawPlayer();
@@ -134,7 +146,7 @@ document.addEventListener("keydown",(e)=>{
 
 // 一時停止・ショップ
 pauseBtn.addEventListener("click",()=>{
-  paused=!paused;
+  paused = !paused;
   shop.classList.toggle("hidden",!paused);
   pauseBtn.textContent = paused ? "再開" : "一時停止";
   clickSound.currentTime=0; clickSound.play();
@@ -149,6 +161,7 @@ shop.querySelectorAll("button").forEach(btn=>{
   });
 });
 
+// アイテム効果
 function buyItem(item){
   switch(item){
     case "car":
@@ -170,7 +183,7 @@ function buyItem(item){
       if(money>=15){ money-=15; showMessage("フィーバータイム！酒・タバコ税発生"); fizzSound.play(); }
       break;
   }
-  moneyElem.textContent=money;
+  moneyElem.textContent = money;
   saveGame();
 }
 
