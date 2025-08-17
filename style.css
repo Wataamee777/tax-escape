@@ -2,16 +2,24 @@ body {
   font-family: sans-serif;
   text-align: center;
   background: #f0f0f0;
+  margin: 0;
+  padding: 20px;
 }
 
 #game-container {
   display: inline-block;
   position: relative;
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px #aaa;
 }
 
 #gameCanvas {
   border: 2px solid black;
-  background: #fff;
+  background: #e0f7fa;
+  display: block;
+  margin: 10px auto;
 }
 
 #salary-container, #money-container {
@@ -23,7 +31,44 @@ body {
   display: none;
 }
 
+#shop {
+  margin-top: 10px;
+}
+
 #shop button {
   margin: 3px;
   padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #2196f3;
+  color: white;
+  font-weight: bold;
+}
+
+#shop button:hover {
+  background-color: #1976d2;
+}
+
+#controls button {
+  margin: 5px;
+  padding: 5px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #4caf50;
+  color: white;
+}
+
+#controls button:hover {
+  background-color: #388e3c;
+}
+
+#message {
+  font-size: 16px;
+  color: #d32f2f;
+  min-height: 20px;
+  margin-top: 5px;
+  font-weight: bold;
 }
