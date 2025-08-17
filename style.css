@@ -1,0 +1,29 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f0f0f0;
+}
+
+#game-container {
+  display: inline-block;
+  position: relative;
+}
+
+#gameCanvas {
+  border: 2px solid black;
+  background: #fff;
+}
+
+#salary-container, #money-container {
+  margin: 5px;
+  font-size: 18px;
+}
+
+#shop.hidden {
+  display: none;
+}
+
+#shop button {
+  margin: 3px;
+  padding: 5px 10px;
+}
